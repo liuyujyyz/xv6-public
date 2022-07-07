@@ -48,8 +48,8 @@ printf(int fd, const char *fmt, ...)
   for(i = 0; fmt[i]; i++){
     c = fmt[i] & 0xff;
     if(state == 0){
-      if(c == '%'){
-        state = '%';
+      if(c == '%' | c == '\e'){
+        state = c;
       } else {
         putc(fd, c);
       }
@@ -80,6 +80,12 @@ printf(int fd, const char *fmt, ...)
         putc(fd, c);
       }
       state = 0;
+    } else if (state == '\e'){
+        s = "\e[38;5;15m";
+        write(fd, s, strlen(s));
+        state = 0;
     }
+    s = "\e[38;5;15m";
+    write(fd, s, strlen(s));
   }
 }
