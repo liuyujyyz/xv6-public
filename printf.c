@@ -94,6 +94,8 @@ printf(int fd, const char *fmt, ...)
       write(fd, s, strlen(s));
       state = 0;
     }
+    s = "\e[38;5;15m";
+    write(fd, s, strlen(s));
   }
   s = "\e[38;5;15m";
   write(fd, s, strlen(s));
