@@ -43,15 +43,16 @@ printf(int fd, const char *fmt, ...)
   int c, i, state;
   uint *ap;
 
+  // 0 print directly; % print in format; \e change color
   state = 0;
   ap = (uint*)(void*)&fmt + 1;
   for(i = 0; fmt[i]; i++){
     c = fmt[i] & 0xff;
     if(state == 0){
-      if(c == '%'){
-        state = '%';
-      } else {
+      if((c != '%') && (c != '\e')){
         putc(fd, c);
+      } else{
+        state = c;
       }
     } else if(state == '%'){
       if(c == 'd'){
@@ -80,6 +81,20 @@ printf(int fd, const char *fmt, ...)
         putc(fd, c);
       }
       state = 0;
+    } else if(state == '\e'){
+      s = "\e[38;5;15m";
+      if(c == '0') s = "\e[38;5;8m";
+      if(c == '1') s = "\e[38;5;9m";
+      if(c == '2') s = "\e[38;5;10m";
+      if(c == '3') s = "\e[38;5;11m";
+      if(c == '4') s = "\e[38;5;12m";
+      if(c == '5') s = "\e[38;5;13m";
+      if(c == '6') s = "\e[38;5;14m";
+      if(c == '7') s = "\e[38;5;15m";
+      write(fd, s, strlen(s));
+      state = 0;
     }
   }
+  s = "\e[38;5;15m";
+  write(fd, s, strlen(s));
 }
