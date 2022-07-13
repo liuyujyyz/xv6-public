@@ -49,10 +49,10 @@ printf(int fd, const char *fmt, ...)
   for(i = 0; fmt[i]; i++){
     c = fmt[i] & 0xff;
     if(state == 0){
-      if((c != '%') && (c != '\e')){
-        putc(fd, c);
-      } else{
+      if((c == '%') || (c == '\e')){
         state = c;
+      } else{
+        putc(fd, c);
       }
     } else if(state == '%'){
       if(c == 'd'){
@@ -94,8 +94,6 @@ printf(int fd, const char *fmt, ...)
       write(fd, s, strlen(s));
       state = 0;
     }
-    s = "\e[38;5;15m";
-    write(fd, s, strlen(s));
   }
   s = "\e[38;5;15m";
   write(fd, s, strlen(s));

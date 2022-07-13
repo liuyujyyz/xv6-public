@@ -63,7 +63,8 @@ ls(char *path)
         printf(1, "\e1ls: cannot stat %s\n", buf);
         continue;
       }
-      printf(1, "\e5%s\e7 %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+      if (st.type == T_DIR) printf(1, "\e5%s\e7 %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+      if (st.type == T_FILE) printf(1, "\e2%s\e7 %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
     }
     break;
   }
